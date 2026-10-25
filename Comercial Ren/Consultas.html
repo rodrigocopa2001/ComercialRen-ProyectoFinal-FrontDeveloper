@@ -1,0 +1,291 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comercial Ren - Mensajes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            900: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Navegación Superior -->
+    <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo e Identidad Comercial Ren -->
+                <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-xl overflow-hidden bg-white border border-slate-600 flex items-center justify-center shadow-md">
+                        <img src="img/logo.jpg" alt="logo" class="h-full w-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-store text-blue-600 text-xl\'></i>';">
+                    </div>
+                    <span class="font-bold text-2xl text-white tracking-tight">Comercial Ren</span>
+                </div>
+                
+                <!-- Menú de Navegación -->
+                <nav class="flex space-x-1 sm:space-x-2 bg-slate-900/80 p-1.5 rounded-xl text-sm font-medium border border-slate-700/50">
+                    <!-- BOTÓN DE RETORNO A PÁGINA DE VENTAS -->
+                    <a href="pagina_ventas.html" class="px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-200 flex items-center gap-2">
+                        <i class="fa-solid fa-house"></i>
+                        <span class="hidden sm:inline">Inicio</span>
+                    </a>
+                    <button id="nav-create" onclick="switchTab('create')" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-white bg-blue-600 shadow-md shadow-blue-900/30 transition-all duration-200 flex items-center gap-2 font-semibold">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="hidden sm:inline">Crear Mensaje</span>
+                    </button>
+                    <button id="nav-take" onclick="switchTab('take')" class="tab-btn px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-2">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span class="hidden sm:inline">Ver Mensajes</span>
+                    </button>
+                    
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Notificaciones -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECCIÓN 1: CREADOR DE MENSAJES -->
+        <section id="section-create" class="space-y-6">
+            <div class="bg-slate-800/80 rounded-2xl shadow-xl border border-slate-700/70 p-6 sm:p-8 backdrop-blur-sm">
+                <div class="border-b border-slate-700 pb-5 mb-6">
+                    <h1 class="text-2xl font-bold text-white">Crear un nuevo mensaje</h1>
+                    <p class="text-slate-400 text-sm mt-1">Escribe el título y el contenido detallado de tu publicación.</p>
+                </div>
+
+                <form id="form-create-survey" onsubmit="saveSurvey(event)" class="space-y-6">
+                    <!-- Título y Descripción -->
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-300 mb-2">Título del mensaje</label>
+                            <input type="text" id="survey-title" required placeholder="Ej: Atención al Cliente 2026" class="w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-900/60 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-300 mb-2">Descripción / Contenido</label>
+                            <textarea id="survey-description" rows="5" required placeholder="Escribe aquí los detalles del mensaje..." class="w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-900/60 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Botón Guardar -->
+                    <div class="pt-6 border-t border-slate-700 flex justify-end">
+                        <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-900/40 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar y Publicar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: VISUALIZAR MENSAJES -->
+        <section id="section-take" class="hidden space-y-6">
+            <!-- Selector de Mensaje -->
+            <div class="bg-slate-800/80 rounded-2xl shadow-xl border border-slate-700/70 p-6 backdrop-blur-sm">
+                <label class="block text-sm font-semibold text-slate-300 mb-2">Selecciona un mensaje publicado:</label>
+                <select id="select-survey" onchange="loadSurveyToAnswer()" class="w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-900/70 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <!-- Opciones cargadas por JS -->
+                </select>
+            </div>
+
+            <!-- Vista del Mensaje -->
+            <div id="active-survey-container" class="bg-slate-800/80 rounded-2xl shadow-xl border border-slate-700/70 p-6 sm:p-8 backdrop-blur-sm hidden">
+                <div class="space-y-4">
+                    <h1 id="active-survey-title" class="text-2xl font-bold text-white border-b border-slate-700 pb-4"></h1>
+                    <div class="bg-slate-900/70 p-5 rounded-xl border border-slate-700">
+                        <span class="block text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2">Descripción</span>
+                        <p id="active-survey-desc" class="text-slate-200 text-base leading-relaxed whitespace-pre-line"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="empty-take-state" class="text-center py-12 bg-slate-800/60 rounded-2xl border border-slate-700/60">
+                <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-3"></i>
+                <p class="text-slate-400">No hay mensajes seleccionados o disponibles.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-slate-950 text-slate-400 py-8 text-center text-xs space-y-2 mt-auto border-t border-slate-800">
+        <p class="font-semibold text-sm text-slate-200">Comercial Ren &copy; 2026</p>
+        <p>Contacto: ventas@comercialRen.com</p>
+        <p>WhatsApp: 944256771</p>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        // --- ESTADO DE LA APLICACIÓN ---
+        let surveys = JSON.parse(localStorage.getItem('surveys_db')) || [];
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            if (surveys.length === 0) {
+                seedInitialData();
+            }
+            updateSurveySelects();
+        };
+
+        // --- DATOS INICIALES DE EJEMPLO ---
+        function seedInitialData() {
+            const initialSurvey = {
+                id: 'srv_demo',
+                title: 'Atención al Cliente Comercial Ren',
+                description: 'Bienvenido al canal de comunicación de Comercial Ren. Encuentra los mejores productos como lavadoras, cocinas, muebles, roperos y más.',
+                createdAt: new Date().toISOString()
+            };
+            surveys.push(initialSurvey);
+            localStorage.setItem('surveys_db', JSON.stringify(surveys));
+        }
+
+        // --- NAVEGACIÓN Y TABS ---
+        function switchTab(tabName) {
+            const tabs = ['create', 'take'];
+            tabs.forEach(tab => {
+                const navBtn = document.getElementById(`nav-${tab}`);
+                const section = document.getElementById(`section-${tab}`);
+                
+                if (tab === tabName) {
+                    navBtn.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-white bg-blue-600 shadow-md shadow-blue-900/30 transition-all duration-200 flex items-center gap-2 font-semibold";
+                    section.classList.remove('hidden');
+                } else {
+                    navBtn.className = "tab-btn px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white transition-all duration-200 flex items-center gap-2";
+                    section.classList.add('hidden');
+                }
+            });
+
+            if (tabName === 'take') loadSurveyToAnswer();
+        }
+
+        // --- TOAST NOTIFICATIONS ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-blue-600 text-white' : 'bg-rose-600 text-white';
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-300' : 'fa-triangle-exclamation text-amber-300';
+
+            toast.className = `${bgColor} px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- GUARDAR MENSAJE ---
+        function saveSurvey(event) {
+            event.preventDefault();
+            const title = document.getElementById('survey-title').value;
+            const description = document.getElementById('survey-description').value;
+
+            const newSurvey = {
+                id: 'srv_' + Date.now(),
+                title: title,
+                description: description,
+                createdAt: new Date().toISOString()
+            };
+
+            surveys.push(newSurvey);
+            localStorage.setItem('surveys_db', JSON.stringify(surveys));
+
+            document.getElementById('form-create-survey').reset();
+            updateSurveySelects();
+            showToast('¡Mensaje guardado con éxito!');
+            switchTab('take');
+        }
+
+        // --- ACTUALIZAR SELECT ---
+        function updateSurveySelects() {
+            const takeSelect = document.getElementById('select-survey');
+            takeSelect.innerHTML = '';
+
+            if (surveys.length === 0) {
+                takeSelect.innerHTML = '<option value="">No hay mensajes disponibles</option>';
+                return;
+            }
+
+            surveys.forEach(srv => {
+                const opt = document.createElement('option');
+                opt.value = srv.id;
+                opt.textContent = srv.title;
+                takeSelect.appendChild(opt);
+            });
+        }
+
+        // --- MOSTRAR MENSAJE ---
+        function loadSurveyToAnswer() {
+            const surveyId = document.getElementById('select-survey').value;
+            const container = document.getElementById('active-survey-container');
+            const emptyState = document.getElementById('empty-take-state');
+
+            if (!surveyId) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            const survey = surveys.find(s => s.id === surveyId);
+            if (!survey) return;
+
+            document.getElementById('active-survey-title').innerText = survey.title;
+            document.getElementById('active-survey-desc').innerText = survey.description || 'Sin descripción';
+
+            container.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
